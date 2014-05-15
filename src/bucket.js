@@ -3540,48 +3540,69 @@ if (!Date.now)
             bucket.ui.handleTickEvent(currentTime);
         }
 
-        bucket.ui.lastTime = 0.0;
-        bucket.ui.lastTimeQuick = 0.0;
+        
+        drove.ui.lastTime = 0.0;
+        drove.ui.lastTimeQuick = 0.0;
 
-        bucket.ui.handleTickEvent = function (currentTime) {
-            if (currentTime >= bucket.ui.lastTime + 1000) {
-                bucket.ui.lastTime = currentTime;
-                bucket.ui.handleTickEventEverySecond(currentTime);
+        drove.ui.handleTickEvent = function (currentTime) {           
+            if (currentTime >= drove.ui.lastTime + 1000)  {
+                drove.ui.lastTime = currentTime;
+                drove.ui.handleTickEventEverySecond(currentTime);
             }
 
-            if (currentTime >= bucket.ui.lastTimeQuick + 200) {
-                bucket.ui.lastTimeQuick = currentTime;
-                bucket.ui.handleTickEventQuick(currentTime);
+            if (currentTime >= drove.ui.lastTimeQuick + 200) {
+                drove.ui.lastTimeQuick = currentTime;
+                drove.ui.handleTickEventQuick(currentTime);
             }
         }
-
-        bucket.ui.handleTickEventEverySecond = function (currentTime) {
+        
+        drove.ui.handleTickEventEverySecond = function (currentTime) {
 
         }
 
-        bucket.ui.handleTickEventQuick = function (currentTime) {
-            bucket.ui.handleContentMoreLinks();
+        drove.ui.handleTickEventQuick = function (currentTime) {
+            drove.ui.handleContentAreas();
         }
 
-        bucket.ui.handleContentMoreLinks = function () {
+        drove.ui.handleContentAreas = function() {            
 
-            var objUrl = $(".url-more");
-            if (objUrl.length > 0) {
+            var objLoad = $(".content-area-item-url");
+            if (objLoad.length > 0) {
 
-                var pos = objUrl.position();
+                //console.log('handleContents:', obj);
 
-                if (pos.top < 1200) {
+                var offset = objLoad.offset();
+                var scrollTop = objLoad.scrollTop();
+                var trigger = (window.screen.availHeight * 1.1);
+
+                console.log('offset', offset);
+                console.log('scrollTop', scrollTop);
+                console.log('trigger', trigger);
+
+                if (offset.top < trigger) {
                     // Load in this as it may scroll into view
-                    var url = objUrl.attr("href");
-                    var container = objUrl.data("container");
+                    var url = objLoad.attr("href");
+                    drove.ui.loadContentArea(objLoad, url);
+                }
+            }
 
-                    if (bucket.u.isNullOrEmptyString(container)) {
-                        container = "#panel-results-items";
-                    }
+            var obj = $(".content-area-items-url");
+            if (obj.length > 0) {
 
-                    objUrl.remove();
+                //console.log('handleContents:', obj);
 
-                    bucket.ui.handleContentDataItems(container, url);
+                var offset = obj.offset();
+                var scrollTop = obj.scrollTop();
+                var trigger = (window.screen.availHeight * 1.1);
+
+                console.log('offset', offset);
+                console.log('scrollTop', scrollTop);
+                console.log('trigger', trigger);
+
+                if (offset.top < trigger) {
+                    // Load in this as it may scroll into view
+                    var url = obj.attr("href");
+                    drove.ui.updateContentAreaUrlItems(obj, url);
                 }
             }
         }
